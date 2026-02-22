@@ -6,6 +6,17 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 'Test suite to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - ui
+          - api
 
 # pipeline  
 jobs:
@@ -21,8 +32,17 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    - name: Copy .env.example to .env
+      run: cp .env.example .env
     - name: Run Playwright tests
-      run: npx playwright test #The Main Event
+      run: |
+        if [ "${{ github.event.inputs.suite }}" = "ui" ]; then
+          npx playwright test tests/ui
+        elif [ "${{ github.event.inputs.suite }}" = "api" ]; then
+          npx playwright test tests/api
+        else
+          npx playwright test
+        fi
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
