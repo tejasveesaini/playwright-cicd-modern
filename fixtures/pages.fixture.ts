@@ -12,13 +12,13 @@ type TestFixtures = {
 export const test = base.extend<TestFixtures>({
     googleNewsPage: async ({ page }, use) => {
         await page.goto('/');
-        console.log('Navigating to Google News...');
+        test.info().annotations.push({ type: 'info', description: 'Navigating to Google News...' });
         const googleNewsPage = new GoogleNewsPage(page);
         await use(googleNewsPage);
     },
     businessNewsPage: async ({ page }, use) => {
         await page.goto('/');
-        console.log('Navigating to Google News...');
+        test.info().annotations.push({ type: 'info', description: 'Navigating to Google News...' });
         const businessNewsPage = new BusinessNewsPage(page);
         await use(businessNewsPage);
     }

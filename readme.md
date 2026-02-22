@@ -2,7 +2,7 @@
     npx playwright test --ui          # Launch Playwright UI mode
     npx playwright test --headed          # Launch Playwright Test in headed mode
     npx playwright test               # Run all tests
-    npx playwright test tests/getNews.spec.ts  # Run a specific test file
+    npx playwright test tests/ui/news.spec.ts  # Run a specific test file
     npx playwright test --project=chromium  # Run tests in Chromium browser
     npx playwright test --trace on
     npx playwright show-trace test-results/your-test-folder/trace.zip.
