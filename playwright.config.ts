@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
+import { env } from './tests/config/env';
 
 dotenv.config();
 /**
@@ -16,22 +17,34 @@ dotenv.config();
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
+  // By default, Playwright runs test files in parallel, 
+  // but tests within a single file sequentially.
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
+  //workers: '100%': Uses all available logical CPU cores.
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
-
+    baseURL: env.baseUrl,
+    launchOptions: {
+      slowMo: 2000, // Add the slowMo option here, with the desired delay in milliseconds
+    },
+    // Typically used with headless: false to see the browser
+    headless: false,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
+    // Run tests in headed mode by default
+    // headless: false, 
+    // Optional: Slow down execution for visual debugging
+    // slowMo: 500, 
   },
 
   /* Configure projects for major browsers */

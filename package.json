@@ -1,14 +1,18 @@
 {
-  "name": "simpleplaywrightfor-interview",
+  "name": "playwright-cicd-modern",
   "version": "1.0.0",
   "description": "",
   "main": "pw.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test tests/ip-lookup.api.spec.ts",
+    "test:ui": "playwright test --ui"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.58.1",
+    "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.0"
   },
   "dependencies": {

@@ -1,23 +1,27 @@
 //To create a fixture in Playwright, you follow a three-step process: 
 // Define the logic, Extend the **base test**, and Use it in your test file
-import { test as base } from '@playwright/test';
-import { HomePage } from '../pages/homepage';
-import { BusinessPage } from '../pages/businessPage';
+import { test as base, expect } from '@playwright/test';
+import { GoogleNewsPage } from '../pages/googlenewspage';
+import { BusinessNewsPage } from '../pages/businessNewsPage';
 
 type TestFixtures = {
-    homePage: HomePage,
-    businessPage: BusinessPage
+    googleNewsPage: GoogleNewsPage;
+    businessNewsPage: BusinessNewsPage;
 }
 //base.extend is how you register Fixtures
 export const test = base.extend<TestFixtures>({
-    homePage: async ({ page }, use) => {
+    googleNewsPage: async ({ page }, use) => {
         await page.goto('/');
-        const homePage = new HomePage(page);
-        await use(homePage);
+        console.log('Navigating to Google News...');
+        const googleNewsPage = new GoogleNewsPage(page);
+        await use(googleNewsPage);
     },
-
-    businessPage: async ({ page }, use) => {
-        const businessPage = new BusinessPage(page);
-        await use(businessPage);
+    businessNewsPage: async ({ page }, use) => {
+        await page.goto('/');
+        console.log('Navigating to Google News...');
+        const businessNewsPage = new BusinessNewsPage(page);
+        await use(businessNewsPage);
     }
 });
+
+export { expect };

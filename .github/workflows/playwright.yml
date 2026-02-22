@@ -12,17 +12,17 @@ jobs:
   testpipeline: # job name
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
+    steps: # pipeline1
+    - uses: actions/checkout@v4 #use a pre-made plugin
     - uses: actions/setup-node@v4
-      with:
+      with: #Used to pass settings to the plugin
         node-version: lts/*
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npx playwright test #The Main Event
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:

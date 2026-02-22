@@ -18,10 +18,25 @@ export class BasePage {
         await this.page.goto(url);
     }
 
+
     /**
-     * Click on an element
+     * Click
      */
     async click(locator: Locator): Promise<void> {
         await locator.click();
+    }
+
+    /**
+     * Set checbox
+     */
+    async checkboxSet(locator: Locator, val: boolean): Promise<void> {
+        await locator.setChecked(val);
+    }
+
+    /**
+   * Fill on an element
+   */
+    async fill(locator: Locator, text: string): Promise<void> {
+        await locator.fill(text);
     }
 }
