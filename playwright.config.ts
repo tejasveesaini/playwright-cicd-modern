@@ -34,17 +34,13 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: env.baseUrl,
     launchOptions: {
-      slowMo: 2000, // Add the slowMo option here, with the desired delay in milliseconds
+      // slowMo is useful for local visual debugging; disabled on CI for speed
+      slowMo: process.env.CI ? 0 : 500,
     },
-    // Typically used with headless: false to see the browser
-    headless: false,
+    // Run headless on CI, headed locally for visual debugging
+    headless: !!process.env.CI,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-
-    // Run tests in headed mode by default
-    // headless: false, 
-    // Optional: Slow down execution for visual debugging
-    // slowMo: 500, 
   },
 
   /* Configure projects for major browsers */
