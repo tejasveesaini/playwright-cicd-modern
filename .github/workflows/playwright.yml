@@ -37,11 +37,11 @@ jobs:
     - name: Run Playwright tests
       run: |
         if [ "${{ github.event.inputs.suite }}" = "ui" ]; then
-          npx playwright test tests/ui
+          npx playwright test tests/ui --headed=false
         elif [ "${{ github.event.inputs.suite }}" = "api" ]; then
-          npx playwright test tests/api
+          npx playwright test tests/api --headed=false
         else
-          npx playwright test
+          npx playwright test --headed=false
         fi
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
