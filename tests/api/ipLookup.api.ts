@@ -1,5 +1,5 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
-import { env } from '../config/env';
+import { env } from '../../config/env';
 
 export interface IpifyResponse {
     ip: string;
