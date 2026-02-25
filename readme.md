@@ -1,53 +1,92 @@
-## Common commands
-    npx playwright test --ui          # Launch Playwright UI mode
-    npx playwright test --headed          # Launch Playwright Test in headed mode
-    npx playwright test               # Run all tests
-    npx playwright test tests/ui/news.spec.ts  # Run a specific test file
-    npx playwright test --project=chromium  # Run tests in Chromium browser
-    npx playwright test --trace on
-    npx playwright show-trace test-results/your-test-folder/trace.zip.
+# Playwright CI/CD Modern
 
-    Debug line-by-line,npx playwright test --debug
-    See what went wrong,npx playwright show-trace [path-to-trace.zip]
-    Pick an element easily,await page.pause() (opens the Inspector)
+A production-grade **Playwright** test automation framework built with **TypeScript**, covering both UI and API testing with a fully automated CI/CD pipeline on GitHub Actions.
 
-## API testing feature (ipify + ipinfo)
-- Added API test: `tests/ip-lookup.api.spec.ts`
-- Added typed API client: `tests/api/ipLookup.api.ts`
-- This test:
-    - fetches your public IP from ipify
-    - fetches IP details from ipinfo
-    - validates response status, IP format, and key geo metadata fields
+---
 
-Run only API tests:
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Test Framework | Playwright |
+| Language | TypeScript (strict typing) |
+| CI/CD | GitHub Actions (sharded, parallel) |
+| Design Pattern | Page Object Model (POM) |
+| API Testing | Playwright `request` context |
+| Config Management | dotenv + typed env config |
+
+## Architecture
+
+```
+├── pages/              # Page Object Models (BasePage → child pages)
+├── fixtures/           # Custom Playwright fixtures for DI
+├── tests/
+│   ├── ui/             # UI tests (Google News, stocks, temperature)
+│   └── api/            # API tests (IP lookup: ipify + ipinfo)
+├── config/             # Typed environment configuration
+├── utils/              # Shared helper utilities
+└── .github/workflows/  # CI/CD pipeline (sharded UI + API jobs)
+```
+
+## Key Features
+
+- **Page Object Model** — `BasePage` with reusable actions; child pages (`GoogleNewsPage`, `BusinessNewsPage`) for clean test code.
+- **Custom Fixtures** — Dependency injection of page objects via `base.extend()`.
+- **API Testing** — Typed API client (`IpLookupApi`) validates public IP retrieval and geo-metadata.
+- **CI/CD Pipeline** — GitHub Actions with:
+  - **Sharded UI tests** (2 parallel runners) for faster execution
+  - **Separate API job** (lightweight, single runner)
+  - **Manual suite selection** (`all`, `ui`, `api`) via `workflow_dispatch`
+  - Browser caching, concurrency control, and artifact uploads
+- **Environment Config** — Centralized, typed config (`config/env.ts`) with `.env` support.
+
+## Quick Start
+
 ```bash
+# Install dependencies
+npm ci
+
+# Install Playwright browsers
+npx playwright install --with-deps
+
+# Copy environment config
+cp .env.example .env
+
+# Run all tests
+npm test
+
+# Run only UI tests (interactive mode)
+npm run test:ui
+
+# Run only API tests
 npm run test:api
 ```
 
-Run all tests:
+## Environment Variables
+
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `BASE_URL` | UI base URL for `page.goto('/')` | `https://news.google.com` |
+| `IPIFY_BASE_URL` | Public IP lookup API | `https://api.ipify.org` |
+| `IPINFO_BASE_URL` | IP metadata lookup API | `https://ipinfo.io` |
+
+## CI/CD Pipeline
+
+The GitHub Actions workflow (`.github/workflows/playwright.yml`) runs on every push/PR to `main`:
+
+| Job | Shards | Timeout | Trigger |
+|-----|--------|---------|---------|
+| UI Tests | 2 parallel | 15 min | push, PR, manual (`ui` / `all`) |
+| API Tests | 1 | 10 min | push, PR, manual (`api` / `all`) |
+
+## Useful Commands
+
 ```bash
-npm test
+npx playwright test --headed          # Run in headed browser mode
+npx playwright test --debug           # Debug line-by-line
+npx playwright test --trace on        # Capture traces for debugging
+npx playwright show-trace <trace.zip> # View trace after a run
 ```
-
-## Environment configuration
-
-1. Copy `.env.example` to `.env`.
-2. Set URLs for your target environment.
-
-```bash
-cp .env.example .env
-```
-
-Variables:
-- `BASE_URL`: UI base URL used by Playwright for `page.goto('/')`.
-- `IPIFY_BASE_URL`: API base URL for public IP lookup.
-- `IPINFO_BASE_URL`: API base URL for IP metadata lookup.
-
-## Important notes
-    In Playwright, almost every interaction is a Promise. This is because the test runner (Node.js) lives in one process, and the browser (Chromium/Firefox/WebKit) lives in another. They communicate via a WebSocket.
-
-## Important links
-    https://playwright.dev/docs/locators
 
 ## Notes
 - Playwright is It is a Microsoft-developed Node.js library
